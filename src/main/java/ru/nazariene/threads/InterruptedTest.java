@@ -1,4 +1,4 @@
-package ru.nazariene;
+package ru.nazariene.threads;
 
 public class InterruptedTest {
 
