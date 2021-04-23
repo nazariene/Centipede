@@ -26,7 +26,6 @@ public class ForkJoinPoolExample {
         }
         ForkJoinTask task = forkJoinPool.submit(new SorterTask(array, 0, 9));
         task.join();
-        System.out.println(array);
         for (i = 0; i < array.length; i++) {
             System.out.println(array[i]);
         }

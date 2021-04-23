@@ -2,20 +2,31 @@ package ru.nazariene.threads;
 
 /**
  * Small demo of why we use volatile
- * While volatile + synchronized will solve the synchronization issues, it is very expensive and slow. Alternative - use Atomics
+ * Volatile - guarantees visibility
+ * synchronized - guarantees visibility AND atomicity
+ *
+ * To add atomicity for volatile - use Atomics.
  */
 public class VolatileExample {
 
     /**
-     * This will have missed writes
+     * This variable will use Thread local cache value. I.e. it might (and most probably will) get missed writes
+     * Basically, thread will not sync its CPU cache with RAM each read/write - therefore, outdated values.
+     * Worst case - each thread will work with this variable locally, without syncing with each other
      */
     private static int counterUnsafe = 0;
     /**
-     * This MIGHT get missed writes, as it is not volatile (i.e. while synchronized, other threads may have outdated caches values)
+     * This will NOT get missed writes and reads. Thread CPU cache will be updated before reads/writes
+     * Basically we have visibility AND atomicity guarantees here.
      */
     private static int counterSynchronized = 0;
+
     /**
-     * This will NOT get missed writes
+     * This might get missed writes - because while volatile provides visibility guarantees
+     * (i.e. Thread local cache will be synced with main memory before reads/writes)
+     * it does NOT guarantee atomicity. And ++ is composite operation.
+     * So, while thread will receive actually value for counter - other thread might not see the full update in time.
+     * But generally spealing this value will be higher in the end than counterUnsafe :)
      */
     private static volatile int counterVolatile = 0;
 
@@ -27,9 +38,10 @@ public class VolatileExample {
         counterSynchronized++;
     }
 
-    public static synchronized void incrementVolatile() {
+    public static void incrementVolatile() {
         counterVolatile++;
     }
+
 
     public static class CountRunnable implements Runnable {
         @Override
@@ -48,6 +60,14 @@ public class VolatileExample {
             System.out.println(Thread.currentThread().getName() + " done");
         }
     }
+
+
+    private static Runnable runnable = () -> {
+        int seed = (int) (Math.random() * (1000));
+        System.out.println("Thread " + Thread.currentThread().getName() + " seed is " + seed);
+        counterVolatile = seed;
+    };
+
 
     public static void main(String[] args) throws InterruptedException {
         Thread threadA = new Thread(new CountRunnable(), "Thread A");

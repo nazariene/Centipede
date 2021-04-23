@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ExecutorDeadlockExample {
+
     public static void main(String[] args) throws InterruptedException {
         Object monitor = new Object();
         Runnable runnable = () -> {
@@ -28,6 +29,8 @@ public class ExecutorDeadlockExample {
             System.out.println("Finished Runnable B!");
 
         };
+
+        //Single threaded executor!
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.submit(runnable);
         executorService.submit(runnableB);

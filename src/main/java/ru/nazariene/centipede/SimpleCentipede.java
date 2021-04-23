@@ -2,7 +2,7 @@ package ru.nazariene.centipede;
 
 public class SimpleCentipede {
 
-    public static volatile Integer monitor = 0;
+    public static volatile Integer MONITOR = 0;
 
     public static void main(String[] args) {
         for (int i = 0; i < 10; i++) {
@@ -20,9 +20,9 @@ public class SimpleCentipede {
         @Override
         public void run() {
             while (true) {
-                if (monitor.equals(number)) {
+                if (MONITOR.equals(number)) {
                     System.out.println("Leg " + number);
-                    monitor++;
+                    MONITOR++;
                 }
             }
         }

@@ -2,10 +2,6 @@ package ru.nazariene.threads;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Small demo of why we use volatile
- * While volatile + synchronized will solve the synchronization issues, it is very expensive and slow. Alternative - use Atomics
- */
 public class AtomicsExample {
 
     private static int counterUnsafe = 0;

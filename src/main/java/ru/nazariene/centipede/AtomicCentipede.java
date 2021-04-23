@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AtomicCentipede {
 
-    public static AtomicInteger monitor = new AtomicInteger(0);
+    public static AtomicInteger MONITOR = new AtomicInteger(0);
 
     public static void main(String[] args) {
         for (int i = 0; i < 30; i++) {
@@ -22,20 +22,29 @@ public class AtomicCentipede {
         @Override
         public void run() {
             while (true) {
-                if (monitor.intValue() == number) {
-                    System.out.println("Leg " + number);
-                    monitor.incrementAndGet();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                }
 
-                    if (monitor.intValue() >= 30) {
+                //Commented out - alternative variant
+                if (MONITOR.intValue() == number) {
+                //var result = MONITOR.compareAndSet(this.number, this.number + 1);
+                //if (result) {
+                    MONITOR.incrementAndGet();
+                    System.out.println("Leg " + number);
+
+                    if (MONITOR.intValue() >= 30) {
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        monitor.compareAndSet(30, 0);
+                        MONITOR.compareAndSet(30, 0);
                     }
                 }
             }
         }
     }
 }
+
